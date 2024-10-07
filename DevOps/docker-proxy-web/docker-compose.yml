@@ -1,0 +1,31 @@
+services:
+  web1:
+    build:
+      context: ./web1
+    ports:
+      - "8555:8555"
+    networks:
+      - webnet
+
+  web2:
+    build:
+      context: ./web2
+    ports:
+      - "8556:8555"  # Cambiar el puerto externo para diferenciar los contenedores
+    networks:
+      - webnet
+
+  proxy:
+    image: nginx:alpine
+    ports:
+      - "80:80"  # Exponer el puerto 80 en la máquina host
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web1
+      - web2
+    networks:
+      - webnet
+
+networks:
+  webnet:
